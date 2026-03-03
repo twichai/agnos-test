@@ -31,7 +31,7 @@ func main() {
 	staffHandler := handler.NewStaffHandler(staffUsecase)
 
 	router := gin.Default()
-	routes.RegisterPatientRoutes(router, patientHandler)
+	routes.RegisterPatientRoutes(router, patientHandler, cfg.AppSecret)
 	routes.RegisterStaffRoutes(router, staffHandler)
 	router.GET("/ping", func(c *gin.Context) {
 		c.JSON(200, gin.H{
