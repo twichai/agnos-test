@@ -16,9 +16,10 @@ func NewStaffGormRepository(db *gorm.DB) repository.StaffRepository {
 	return &StaffGormRepository{db: db}
 }
 
-// Create implements [repository.StaffRepository].
+// Create implements
 func (s *StaffGormRepository) Create(ctx context.Context, staff *entity.CreateStaffRequest) (*entity.Staff, error) {
 	newStaff := &entity.Staff{
+		ID:         generateUUID(),
 		Username:   staff.Username,
 		Password:   staff.Password,
 		HospitalID: staff.HospitalID,

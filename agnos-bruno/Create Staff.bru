@@ -5,9 +5,17 @@ meta {
 }
 
 post {
-  url: {{baseUrl}}/staff/create?username={{staffUsername}}&password={{staffPassword}}&hospital_id={{staffHospitalId}}
-  body: none
+  url: {{baseUrl}}/staff/create
+  body: json
   auth: none
+}
+
+body:json {
+  {
+    "username": "{{staffUsername}}",
+    "password": "{{staffPassword}}",
+    "hospital_id": "{{staffHospitalId}}"
+  }
 }
 
 settings {

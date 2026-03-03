@@ -5,6 +5,8 @@ import (
 	"twichai/agnos-test/pkg/staff/entity"
 	"twichai/agnos-test/pkg/staff/repository"
 	"twichai/agnos-test/pkg/staff/usecase"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 type StaffService struct {
@@ -17,6 +19,16 @@ func NewStaffService(repo repository.StaffRepository) usecase.StaffUseCase {
 
 // Create implements [usecase.StaffUseCase].
 func (s *StaffService) Create(ctx context.Context, staff *entity.CreateStaffRequest) (*entity.Staff, error) {
-	staff.Password = "hashed_" + staff.Password
+	hashedPassword, err := hashPassword(staff.Password)
+	if err != nil {
+		return nil, err
+	}
+
+	staff.Password = hashedPassword
 	return s.repo.Create(ctx, staff)
+}
+
+func hashPassword(password string) (string, error) {
+	bytes, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	return string(bytes), err
 }

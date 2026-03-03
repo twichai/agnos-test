@@ -4,6 +4,7 @@ import (
 	"log"
 	"twichai/agnos-test/api/handler"
 	"twichai/agnos-test/api/routes"
+	"twichai/agnos-test/internal/config"
 	"twichai/agnos-test/internal/database"
 	patientRepo "twichai/agnos-test/internal/repository"
 	staffRepo "twichai/agnos-test/internal/repository"
@@ -14,7 +15,9 @@ import (
 )
 
 func main() {
-	db, err := database.NewPostgresGormFromEnv()
+	cfg := config.Load()
+
+	db, err := database.NewPostgresGorm(cfg.DBURL)
 	if err != nil {
 		log.Fatalf("failed to connect database: %v", err)
 	}
@@ -24,7 +27,7 @@ func main() {
 	patientHandler := handler.NewPatientHandler(patientUsecase)
 
 	staffRepository := staffRepo.NewStaffGormRepository(db)
-	staffUsecase := staffUsecase.NewStaffUsecase(staffRepository)
+	staffUsecase := staffUsecase.NewStaffService(staffRepository)
 	staffHandler := handler.NewStaffHandler(staffUsecase)
 
 	router := gin.Default()
@@ -35,5 +38,5 @@ func main() {
 			"message": "pong",
 		})
 	})
-	router.Run() // listens on 0.0.0.0:8080 by default
+	router.Run(":" + cfg.AppPort)
 }

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"net/http"
+	"strings"
 	"twichai/agnos-test/pkg/staff/entity"
 	"twichai/agnos-test/pkg/staff/usecase"
 
@@ -17,18 +18,17 @@ func NewStaffHandler(usecase usecase.StaffUseCase) *StaffHandler {
 }
 
 func (h *StaffHandler) Create(ginContext *gin.Context) {
-	// body username, password, hospital_id
-	var request struct {
-		Username   string `json:"username"`
-		Password   string `json:"password"`
-		HospitalID string `json:"hospital_id"`
-	}
+	var request entity.CreateStaffRequest
 	if err := ginContext.ShouldBindJSON(&request); err != nil {
 		ginContext.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": "invalid request body",
+			"error": "invalid request body: username, password, hospital_id(uuid) are required",
 		})
 		return
 	}
+
+	request.Username = strings.TrimSpace(request.Username)
+	request.Password = strings.TrimSpace(request.Password)
+	request.HospitalID = strings.TrimSpace(request.HospitalID)
 
 	if request.Username == "" || request.Password == "" || request.HospitalID == "" {
 		ginContext.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
