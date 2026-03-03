@@ -17,6 +17,11 @@ type Staff struct {
 	UpdatedAt  time.Time `json:"updated_at" gorm:"column:updated_at"`
 }
 
+type StaffLoginRequest struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+}
+
 func (Staff) TableName() string {
 	return "staffs"
 }

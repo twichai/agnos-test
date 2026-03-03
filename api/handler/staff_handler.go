@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"errors"
 	"net/http"
 	"strings"
 	"twichai/agnos-test/pkg/staff/entity"
@@ -46,6 +47,46 @@ func (h *StaffHandler) Create(ginContext *gin.Context) {
 	if err != nil {
 		ginContext.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),
+		})
+		return
+	}
+
+	ginContext.JSON(http.StatusOK, staff)
+}
+
+func (h *StaffHandler) Login(ginContext *gin.Context) {
+	var request entity.StaffLoginRequest
+	if err := ginContext.ShouldBindJSON(&request); err != nil {
+		ginContext.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": "invalid request body: username and password are required",
+		})
+		return
+	}
+
+	request.Username = strings.TrimSpace(request.Username)
+	request.Password = strings.TrimSpace(request.Password)
+
+	if request.Username == "" || request.Password == "" {
+		ginContext.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": "username and password are required",
+		})
+		return
+	}
+
+	staff, err := h.usecase.Login(ginContext.Request.Context(), &entity.StaffLoginRequest{
+		Username: request.Username,
+		Password: request.Password,
+	})
+	if err != nil {
+		if errors.Is(err, usecase.ErrInvalidCredentials) {
+			ginContext.JSON(http.StatusUnauthorized, gin.H{
+				"error": "username or password is incorrect",
+			})
+			return
+		}
+
+		ginContext.JSON(http.StatusInternalServerError, gin.H{
+			"error": "internal server error",
 		})
 		return
 	}

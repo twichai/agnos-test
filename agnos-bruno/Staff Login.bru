@@ -1,0 +1,23 @@
+meta {
+  name: Staff Login
+  type: http
+  seq: 4
+}
+
+post {
+  url: {{baseUrl}}/staff/login
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "username": "{{staffUsername}}",
+    "password": "{{staffPassword}}"
+  }
+}
+
+settings {
+  encodeUrl: true
+  followRedirects: true
+}

@@ -27,7 +27,7 @@ func main() {
 	patientHandler := handler.NewPatientHandler(patientUsecase)
 
 	staffRepository := staffRepo.NewStaffGormRepository(db)
-	staffUsecase := staffUsecase.NewStaffService(staffRepository)
+	staffUsecase := staffUsecase.NewStaffService(staffRepository, cfg.AppSecret)
 	staffHandler := handler.NewStaffHandler(staffUsecase)
 
 	router := gin.Default()

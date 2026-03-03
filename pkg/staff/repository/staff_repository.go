@@ -7,4 +7,5 @@ import (
 
 type StaffRepository interface {
 	Create(ctx context.Context, staff *entity.CreateStaffRequest) (*entity.Staff, error)
+	GetByUsername(ctx context.Context, username string) (*entity.Staff, error)
 }
