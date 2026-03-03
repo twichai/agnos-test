@@ -1,6 +1,10 @@
 package config
 
-import "os"
+import (
+	"os"
+
+	"github.com/joho/godotenv"
+)
 
 const defaultDBURL = "postgres://postgres:postgres@localhost:5432/his?sslmode=disable"
 const defaultAppPort = "8080"
@@ -12,6 +16,9 @@ type Config struct {
 }
 
 func Load() Config {
+	// Load .env file if present (silently ignore if not found)
+	_ = godotenv.Load()
+
 	return Config{
 		AppPort:   getEnv("APP_PORT", defaultAppPort),
 		DBURL:     getEnv("DB_URL", defaultDBURL),
