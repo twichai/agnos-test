@@ -21,3 +21,10 @@ settings {
   encodeUrl: true
   followRedirects: true
 }
+
+script:post-response {
+  const body = res.getBody();
+  if (body && body.token) {
+    bru.setEnvVar("authToken", body.token);
+  }
+}
