@@ -1,0 +1,23 @@
+info:
+  name: staff-create
+  type: http
+  seq: 3
+
+http:
+  method: POST
+  url: http://localhost:8080/staff/create
+  body:
+    type: json
+    data: |-
+      {
+        "username": "staff_a",
+        "password": "1234",
+        "hospital_id": "1111"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

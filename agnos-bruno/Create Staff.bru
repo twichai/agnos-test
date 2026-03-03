@@ -1,0 +1,16 @@
+meta {
+  name: Create Staff
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{baseUrl}}/staff/create?username={{staffUsername}}&password={{staffPassword}}&hospital_id={{staffHospitalId}}
+  body: none
+  auth: none
+}
+
+settings {
+  encodeUrl: true
+  followRedirects: true
+}
