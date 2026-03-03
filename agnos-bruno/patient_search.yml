@@ -5,8 +5,10 @@ info:
 
 http:
   method: GET
-  url: http://localhost:8080/patient/search/NIDA000000000001
-  auth: inherit
+  url: "{{baseUrl}}/patient/search/1100000000001"
+  auth:
+    type: bearer
+    token: "{{authToken}}"
 
 settings:
   encodeUrl: true

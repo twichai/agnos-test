@@ -5,16 +5,21 @@ info:
 
 http:
   method: POST
-  url: http://localhost:8080/staff/create
+  url: "{{baseUrl}}/staff/create"
   body:
     type: json
     data: |-
       {
-        "username": "staff_a",
+        "username": "staf_a",
         "password": "1234",
         "hospital_id": "df5b6d58-f9ee-4ab2-a23e-557fbac85526"
       }
   auth: inherit
+
+runtime:
+  variables:
+    - name: baseUrl
+      value: http://localhost:8080
 
 settings:
   encodeUrl: true
