@@ -3,6 +3,7 @@ package repository
 import (
 	"context"
 	"twichai/agnos-test/pkg/patient/entity"
+	"twichai/agnos-test/pkg/patient/repository"
 
 	"gorm.io/gorm"
 )
@@ -11,7 +12,7 @@ type PatientGormRepository struct {
 	db *gorm.DB
 }
 
-func NewPatientGormRepository(db *gorm.DB) *PatientGormRepository {
+func NewPatientGormRepository(db *gorm.DB) repository.PatientRepository {
 	return &PatientGormRepository{db: db}
 }
 
