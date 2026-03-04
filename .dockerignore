@@ -1,0 +1,9 @@
+.git
+.gitignore
+.vscode
+tmp
+agnos-bruno
+*.log
+.air.toml
+docker-compose*.yml
+README*
