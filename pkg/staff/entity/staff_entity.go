@@ -24,8 +24,9 @@ type Staff struct {
 }
 
 type StaffLoginRequest struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
+	Username   string `json:"username" binding:"required"`
+	Password   string `json:"password" binding:"required"`
+	HospitalID string `json:"hospital_id" binding:"required,uuid"`
 }
 
 func (Staff) TableName() string {

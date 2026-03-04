@@ -43,7 +43,7 @@ func hashPassword(password string) (string, error) {
 
 // Login implements [usecase.StaffUseCase].
 func (s *StaffService) Login(ctx context.Context, staff *entity.StaffLoginRequest) (*patient.LoginStaffPresenter, error) {
-	existingStaff, err := s.repo.GetByUsername(ctx, staff.Username)
+	existingStaff, err := s.repo.GetByUsername(ctx, staff.Username, staff.HospitalID)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, usecase.ErrInvalidCredentials

@@ -32,9 +32,9 @@ func (s *StaffGormRepository) Create(ctx context.Context, staff *entity.CreateSt
 }
 
 // GetByUsername implements [repository.StaffRepository].
-func (s *StaffGormRepository) GetByUsername(ctx context.Context, username string) (*entity.Staff, error) {
+func (s *StaffGormRepository) GetByUsername(ctx context.Context, username string, hospitalID string) (*entity.Staff, error) {
 	var staff entity.Staff
-	err := s.db.WithContext(ctx).Where("username = ?", username).Preload("Hospital").First(&staff).Error
+	err := s.db.WithContext(ctx).Joins("Hospital").Where("username = ? AND hospital_id = ?", username, hospitalID).Preload("Hospital").First(&staff).Error
 	if err != nil {
 		return nil, err
 	}

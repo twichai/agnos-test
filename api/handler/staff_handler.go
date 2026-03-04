@@ -58,13 +58,21 @@ func (h *StaffHandler) Login(ginContext *gin.Context) {
 	var request entity.StaffLoginRequest
 	if err := ginContext.ShouldBindJSON(&request); err != nil {
 		ginContext.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
-			"error": "invalid request body: username and password are required",
+			"error": "invalid request body: username, password, and hospital_id are required",
 		})
 		return
 	}
 
 	request.Username = strings.TrimSpace(request.Username)
 	request.Password = strings.TrimSpace(request.Password)
+	request.HospitalID = strings.TrimSpace(request.HospitalID)
+
+	if request.HospitalID == "" {
+		ginContext.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
+			"error": "hospital_id is required",
+		})
+		return
+	}
 
 	if request.Username == "" || request.Password == "" {
 		ginContext.AbortWithStatusJSON(http.StatusBadRequest, gin.H{
@@ -74,8 +82,9 @@ func (h *StaffHandler) Login(ginContext *gin.Context) {
 	}
 
 	staff, err := h.usecase.Login(ginContext.Request.Context(), &entity.StaffLoginRequest{
-		Username: request.Username,
-		Password: request.Password,
+		Username:   request.Username,
+		Password:   request.Password,
+		HospitalID: request.HospitalID,
 	})
 	if err != nil {
 		if errors.Is(err, usecase.ErrInvalidCredentials) {
