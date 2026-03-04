@@ -1,6 +1,9 @@
 package entity
 
-import "time"
+import (
+	"time"
+	"twichai/agnos-test/pkg/hospital/entity"
+)
 
 type CreateStaffRequest struct {
 	Username   string `json:"username" binding:"required"`
@@ -15,6 +18,9 @@ type Staff struct {
 	HospitalID string    `json:"hospital_id" gorm:"column:hospital_id;type:uuid"`
 	CreatedAt  time.Time `json:"created_at" gorm:"column:created_at"`
 	UpdatedAt  time.Time `json:"updated_at" gorm:"column:updated_at"`
+
+	// relationship
+	Hospital entity.Hospital `json:"hospital" gorm:"foreignKey:HospitalID;references:ID"`
 }
 
 type StaffLoginRequest struct {

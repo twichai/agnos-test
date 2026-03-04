@@ -35,6 +35,18 @@ type PatientHospital struct {
 	Hospital hospitalEntity.Hospital `json:"hospital" gorm:"foreignKey:HospitalID;references:ID"`
 }
 
+type SeachPatientRequest struct {
+	NationalID  *string `json:"national_id"`
+	PassportID  *string `json:"passport_id"`
+	FirstName   *string `json:"first_name"`
+	MiddleName  *string `json:"middle_name"`
+	LastName    *string `json:"last_name"`
+	DateOfBirth *string `json:"date_of_birth"`
+	PhoneNumber *string `json:"phone_number"`
+	Email       *string `json:"email"`
+	HospitalURL string  `json:"hospital_url" binding:"required"`
+}
+
 func (PatientHospital) TableName() string {
 	return "patient_hospitals"
 }

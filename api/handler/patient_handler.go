@@ -3,6 +3,7 @@ package handler
 import (
 	"net/http"
 	presenter "twichai/agnos-test/api/presenter/patient"
+	"twichai/agnos-test/pkg/patient/entity"
 	usecase "twichai/agnos-test/pkg/patient/usecase"
 
 	"github.com/gin-gonic/gin"
@@ -35,4 +36,35 @@ func (h *PatientHandler) GetPatientByID(c *gin.Context) {
 	respont := presenter.ToPatientPresenter(patient)
 
 	c.JSON(http.StatusOK, respont)
+}
+
+func (h *PatientHandler) SearchPatient(c *gin.Context) {
+	nationalID := c.Query("national_id")
+	passportID := c.Query("passport_id")
+	firstName := c.Query("first_name")
+	middleName := c.Query("middle_name")
+	lastName := c.Query("last_name")
+	dateOfBirth := c.Query("date_of_birth")
+	phoneNumber := c.Query("phone_number")
+	email := c.Query("email")
+
+	patients, err := h.patientUsecase.Search(c.Request.Context(), &entity.SeachPatientRequest{
+		NationalID:  &nationalID,
+		PassportID:  &passportID,
+		FirstName:   &firstName,
+		MiddleName:  &middleName,
+		LastName:    &lastName,
+		DateOfBirth: &dateOfBirth,
+		PhoneNumber: &phoneNumber,
+		Email:       &email,
+	}, "hospital-a")
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, patients)
 }

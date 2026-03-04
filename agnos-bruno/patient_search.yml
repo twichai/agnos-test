@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{baseUrl}}/patient/search/1100000000001"
+  url: "{{baseUrl}}/patient/search/0861111111"
   auth:
     type: bearer
     token: "{{authToken}}"

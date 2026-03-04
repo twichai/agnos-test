@@ -36,3 +36,8 @@ func (u *patientUsecase) SearchByID(ctx context.Context, id string, hospitalURL 
 
 	return patient, nil
 }
+
+// Search implements [usecase.PatientUsecase].
+func (u *patientUsecase) Search(ctx context.Context, req *entity.SeachPatientRequest, hospitalURL string) ([]*entity.Patient, error) {
+	return u.repo.Search(ctx, req, hospitalURL)
+}

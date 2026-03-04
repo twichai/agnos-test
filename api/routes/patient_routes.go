@@ -11,4 +11,6 @@ func RegisterPatientRoutes(router *gin.Engine, patientHandler *handler.PatientHa
 	authorized := router.Group("")
 	authorized.Use(middleware.AuthMiddleware(appSecret))
 	authorized.GET("/patient/search/:id", patientHandler.GetPatientByID)
+	authorized.GET("/patient/search", patientHandler.SearchPatient)
+
 }

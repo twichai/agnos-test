@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"time"
+	"twichai/agnos-test/api/middleware"
 	"twichai/agnos-test/api/presenter/patient"
 	"twichai/agnos-test/pkg/staff/entity"
 	"twichai/agnos-test/pkg/staff/repository"
@@ -22,13 +23,6 @@ type StaffService struct {
 
 func NewStaffService(repo repository.StaffRepository, appSecret string) usecase.StaffUseCase {
 	return &StaffService{repo: repo, jwtSecret: []byte(appSecret)}
-}
-
-type Claims struct {
-	StaffName  string `json:"staff_name"`
-	HospitalID string `json:"hospital_id"`
-	StaffID    string `json:"staff_id"`
-	jwt.RegisteredClaims
 }
 
 // Create implements [usecase.StaffUseCase].
@@ -81,10 +75,10 @@ func (s *StaffService) Login(ctx context.Context, staff *entity.StaffLoginReques
 func (s *StaffService) generateToken(staff *entity.Staff) (string, error) {
 	now := time.Now()
 
-	claims := Claims{
-		StaffName:  staff.Username,
-		HospitalID: staff.HospitalID,
-		StaffID:    staff.ID,
+	claims := middleware.Claims{
+		StaffName:   staff.Username,
+		HospitalURL: staff.Hospital.HospitalURL,
+		StaffID:     staff.ID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Subject:   staff.ID,
 			IssuedAt:  jwt.NewNumericDate(now),
