@@ -43,16 +43,16 @@ func (r *PatientGormRepository) Search(ctx context.Context, req *entity.SeachPat
 	if req.PassportID != nil && *req.PassportID != "" {
 		query = query.Where("patients.passport_id = ?", req.PassportID)
 	}
-	if *req.FirstName != "" {
+	if req.FirstName != nil && *req.FirstName != "" {
 		query = query.Where("patients.first_name_th ILIKE ? OR patients.first_name_en ILIKE ?", "%"+*req.FirstName+"%", "%"+*req.FirstName+"%")
 	}
-	if *req.MiddleName != "" {
+	if req.MiddleName != nil && *req.MiddleName != "" {
 		query = query.Where("patients.middle_name_th ILIKE ? OR patients.middle_name_en ILIKE ?", "%"+*req.MiddleName+"%", "%"+*req.MiddleName+"%")
 	}
-	if *req.LastName != "" {
+	if req.LastName != nil && *req.LastName != "" {
 		query = query.Where("patients.last_name_th ILIKE ? OR patients.last_name_en ILIKE ?", "%"+*req.LastName+"%", "%"+*req.LastName+"%")
 	}
-	if *req.DateOfBirth != "" {
+	if req.DateOfBirth != nil && *req.DateOfBirth != "" {
 		query = query.Where("patients.date_of_birth = ?", req.DateOfBirth)
 	}
 	if req.PhoneNumber != nil && *req.PhoneNumber != "" {

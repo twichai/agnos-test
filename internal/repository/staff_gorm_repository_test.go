@@ -10,48 +10,21 @@ import (
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
 )
-
-func setupTestDB() *gorm.DB {
-	dsn := "host=localhost user=postgres password=postgres dbname=his port=5432 sslmode=disable TimeZone=Asia/Bangkok"
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
-	if err != nil {
-		panic(fmt.Sprintf("Failed to open database: %v", err))
-	}
-	return db
-}
-
-func mustGetHospitalIDByURL(t *testing.T, db *gorm.DB, hospitalURL string) string {
-	t.Helper()
-
-	var hospital struct {
-		ID string
-	}
-
-	err := db.Table("hospitals").
-		Select("id").
-		Where("hospital_url = ?", hospitalURL).
-		Take(&hospital).Error
-	require.NoError(t, err, "failed to find hospital by url %q", hospitalURL)
-
-	return hospital.ID
-}
 
 func TestCreateStaff(t *testing.T) {
 	db := setupTestDB()
 	repo := NewStaffGormRepository(db)
 
 	ctx := context.Background()
-	hospitalID := mustGetHospitalIDByURL(t, db, "hospital-a")
+	hospital := createHospital(t, db, "hospital-a", "hospital-a")
 	username := fmt.Sprintf("testuser_%d", time.Now().UnixNano())
 
 	t.Run("Add staff success.", func(t *testing.T) {
 		staff := &entity.CreateStaffRequest{
 			Username:   username,
 			Password:   "testpassword",
-			HospitalID: hospitalID,
+			HospitalID: hospital.ID,
 		}
 
 		created, err := repo.Create(ctx, staff)
@@ -70,12 +43,12 @@ func TestCreateStaff(t *testing.T) {
 		staff1 := &entity.CreateStaffRequest{
 			Username:   username,
 			Password:   "testpassword",
-			HospitalID: hospitalID,
+			HospitalID: hospital.ID,
 		}
 		staff2 := &entity.CreateStaffRequest{
 			Username:   username,
 			Password:   "testpassword2",
-			HospitalID: hospitalID,
+			HospitalID: hospital.ID,
 		}
 
 		created1, err := repo.Create(ctx, staff1)
@@ -94,17 +67,17 @@ func TestCreateStaff(t *testing.T) {
 	})
 
 	t.Run("Add staff duplicate username but different hospital ID", func(t *testing.T) {
-		otherHospitalID := mustGetHospitalIDByURL(t, db, "hospital-b")
+		otherHospital := createHospital(t, db, "hospital-b", "hospital-b")
 
 		staff1 := &entity.CreateStaffRequest{
 			Username:   username,
 			Password:   "testpassword",
-			HospitalID: hospitalID,
+			HospitalID: hospital.ID,
 		}
 		staff2 := &entity.CreateStaffRequest{
 			Username:   username,
 			Password:   "testpassword2",
-			HospitalID: otherHospitalID,
+			HospitalID: otherHospital.ID,
 		}
 
 		created1, err := repo.Create(ctx, staff1)
@@ -122,13 +95,13 @@ func TestGetByUsername(t *testing.T) {
 	repo := NewStaffGormRepository(db)
 
 	ctx := context.Background()
-	hospitalID := mustGetHospitalIDByURL(t, db, "hospital-a")
+	hospital := createHospital(t, db, "hospital-a", "hospital-a")
 	username := fmt.Sprintf("testuser_%d", time.Now().UnixNano())
 
 	staff := &entity.CreateStaffRequest{
 		Username:   username,
 		Password:   "testpassword",
-		HospitalID: hospitalID,
+		HospitalID: hospital.ID,
 	}
 
 	created, err := repo.Create(ctx, staff)
@@ -141,7 +114,7 @@ func TestGetByUsername(t *testing.T) {
 	})
 
 	t.Run("Get existing staff by correct username and hospital ID", func(t *testing.T) {
-		fetched, err := repo.GetByUsername(ctx, username, hospitalID)
+		fetched, err := repo.GetByUsername(ctx, username, hospital.ID)
 		require.NoError(t, err)
 		require.NotNil(t, fetched)
 		assert.Equal(t, created.ID, fetched.ID)
@@ -151,14 +124,14 @@ func TestGetByUsername(t *testing.T) {
 	})
 
 	t.Run("Get non-existing staff by correct username but wrong hospital ID", func(t *testing.T) {
-		otherHospitalID := mustGetHospitalIDByURL(t, db, "hospital-b")
-		fetched, err := repo.GetByUsername(ctx, username, otherHospitalID)
+		otherHospital := createHospital(t, db, "hospital-b", "hospital-b")
+		fetched, err := repo.GetByUsername(ctx, username, otherHospital.ID)
 		require.Error(t, err)
 		assert.Nil(t, fetched)
 	})
 
 	t.Run("Get non-existing staff by wrong username but correct hospital ID", func(t *testing.T) {
-		fetched, err := repo.GetByUsername(ctx, "nonexistinguser", hospitalID)
+		fetched, err := repo.GetByUsername(ctx, "nonexistinguser", hospital.ID)
 		require.Error(t, err)
 		assert.Nil(t, fetched)
 	})

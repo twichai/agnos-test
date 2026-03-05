@@ -23,7 +23,8 @@ type Patient struct {
 	UpdatedAt    time.Time `json:"updated_at" gorm:"column:updated_at"`
 
 	// Relationships
-	PatientHospitals []PatientHospital `json:"patient_hospitals" gorm:"foreignKey:PatientID;references:ID"`
+	PatientHospitals []PatientHospital         `json:"patient_hospitals" gorm:"foreignKey:PatientID;references:ID"`
+	Hotels           []hospitalEntity.Hospital `json:"hospitals" gorm:"many2many:patient_hospitals;joinForeignKey:PatientID;joinReferences:HospitalID"`
 }
 
 type PatientHospital struct {
