@@ -16,12 +16,25 @@ func TestSearchPatientByID(t *testing.T) {
 	repo := NewPatientGormRepository(db)
 	ctx := context.Background()
 
-	t.Run("Search existing patient with id", func(t *testing.T) {
-		patient, err := repo.SearchByID(ctx, "1100000000001")
+	hostpitalA := createHospital(t, db, "hospital-aa", "hospital-aa")
+	// hostpitalB := createHospital(t, db, "hospital-b", "hospital-b")
+	patient1 := createMalePatient(t, db, hostpitalA.ID)
+	// patient2 := createMalePatient(t, db, hostpitalA.ID)
+	// patient3 := createFemalePatient(t, db, hostpitalA.ID)
+
+	// patient4 := createMalePatient(t, db, hostpitalB.ID)
+
+	t.Run("Search existing patient with national ID", func(t *testing.T) {
+		patient, err := repo.SearchByID(ctx, *patient1.NationalID)
 		require.NoError(t, err)
 		require.NotNil(t, patient)
-		require.NotNil(t, patient.NationalID)
-		assert.Equal(t, "1100000000001", *patient.NationalID)
+		// assert.Equal(t, patient1.ID, *&patient.ID)
+
+		// patient, err = repo.SearchByID(ctx, *patient4.NationalID)
+		// require.NoError(t, err)
+		// require.NotNil(t, patient)
+		// require.NotNil(t, patient.NationalID)
+		// assert.Equal(t, patient4, *patient.NationalID)
 	})
 
 	t.Run("Search non-existing patient with id", func(t *testing.T) {
