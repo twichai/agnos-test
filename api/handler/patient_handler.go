@@ -39,14 +39,14 @@ func (h *PatientHandler) GetPatientByID(c *gin.Context) {
 }
 
 func (h *PatientHandler) SearchPatient(c *gin.Context) {
-	nationalID := c.Query("national_id")
-	passportID := c.Query("passport_id")
-	firstName := c.Query("first_name")
-	middleName := c.Query("middle_name")
-	lastName := c.Query("last_name")
-	dateOfBirth := c.Query("date_of_birth")
-	phoneNumber := c.Query("phone_number")
-	email := c.Query("email")
+
+	var request entity.SeachPatientRequest
+	if err := c.ShouldBindBodyWithJSON(&request); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "invalid query parameters",
+		})
+		return
+	}
 
 	// get hospital id from context (set by auth middleware)
 	hospitalID, exists := c.Get("hospital_id")
@@ -57,16 +57,7 @@ func (h *PatientHandler) SearchPatient(c *gin.Context) {
 		return
 	}
 
-	patients, err := h.patientUsecase.Search(c.Request.Context(), &entity.SeachPatientRequest{
-		NationalID:  &nationalID,
-		PassportID:  &passportID,
-		FirstName:   &firstName,
-		MiddleName:  &middleName,
-		LastName:    &lastName,
-		DateOfBirth: &dateOfBirth,
-		PhoneNumber: &phoneNumber,
-		Email:       &email,
-	}, hospitalID.(string))
+	patients, err := h.patientUsecase.Search(c.Request.Context(), &request, hospitalID.(string))
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
@@ -75,5 +66,5 @@ func (h *PatientHandler) SearchPatient(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, patients)
+	c.JSON(http.StatusOK, presenter.ToPatientPresenters(patients))
 }

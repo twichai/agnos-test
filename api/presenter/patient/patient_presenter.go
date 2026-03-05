@@ -45,6 +45,14 @@ func ToPatientPresenter(patient *entity.Patient) *PatientPresenter {
 	return respont
 }
 
+func ToPatientPresenters(patients []*entity.Patient) []*PatientPresenter {
+	var presenters []*PatientPresenter
+	for _, patient := range patients {
+		presenters = append(presenters, ToPatientPresenter(patient))
+	}
+	return presenters
+}
+
 func getStringValue(s *string) string {
 	if s == nil {
 		return ""
