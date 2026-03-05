@@ -1,0 +1,31 @@
+info:
+  name: staff-login
+  type: http
+  seq: 4
+
+http:
+  method: POST
+  url: "{{baseUrl}}/staff/login"
+  body:
+    type: json
+    data: |-
+      {
+        "username": "staff_a",
+        "password": "1234"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const body = res.getBody();
+        if (body && body.token) {
+          bru.setEnvVar("authToken", body.token);
+        }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
