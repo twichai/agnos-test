@@ -8,9 +8,9 @@ import (
 )
 
 func RegisterPatientRoutes(router *gin.Engine, patientHandler *handler.PatientHandler, appSecret string) {
+	router.GET("/patient/search/:id", patientHandler.GetPatientByID)
 	authorized := router.Group("")
 	authorized.Use(middleware.AuthMiddleware(appSecret))
-	authorized.GET("/patient/search/:id", patientHandler.GetPatientByID)
 	authorized.GET("/patient/search", patientHandler.SearchPatient)
 
 }
