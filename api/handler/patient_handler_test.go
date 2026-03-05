@@ -1,12 +1,12 @@
 package handler
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"errors"
 	"net/http"
 	"net/http/httptest"
-	"net/url"
 	"testing"
 	"time"
 
@@ -152,7 +152,7 @@ func (m mockPatientUsecase) Search(ctx context.Context, req *entity.SeachPatient
 		},
 	}
 
-	if hospitalID == "3fa85f64-5717-4562-b3fc-2c963f66afa6" && *req.NationalID == "th123456789" {
+	if hospitalID == "3fa85f64-5717-4562-b3fc-2c963f66afa6" && req.NationalID != nil && *req.NationalID == "th123456789" {
 		return patients[:1], nil
 	}
 
@@ -251,38 +251,35 @@ func TestPatientSearchPatient(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.description, func(t *testing.T) {
-			query := url.Values{}
+			body := map[string]string{}
 			if test.patientRequest.nationalID != "" {
-				query.Set("national_id", test.patientRequest.nationalID)
+				body["national_id"] = test.patientRequest.nationalID
 			}
 			if test.patientRequest.passportID != "" {
-				query.Set("passport_id", test.patientRequest.passportID)
+				body["passport_id"] = test.patientRequest.passportID
 			}
 			if test.patientRequest.firstName != "" {
-				query.Set("first_name", test.patientRequest.firstName)
+				body["first_name"] = test.patientRequest.firstName
 			}
 			if test.patientRequest.middleName != "" {
-				query.Set("middle_name", test.patientRequest.middleName)
+				body["middle_name"] = test.patientRequest.middleName
 			}
 			if test.patientRequest.lastName != "" {
-				query.Set("last_name", test.patientRequest.lastName)
+				body["last_name"] = test.patientRequest.lastName
 			}
 			if test.patientRequest.dateOfBirth != "" {
-				query.Set("date_of_birth", test.patientRequest.dateOfBirth)
+				body["date_of_birth"] = test.patientRequest.dateOfBirth
 			}
 			if test.patientRequest.phoneNumber != "" {
-				query.Set("phone_number", test.patientRequest.phoneNumber)
+				body["phone_number"] = test.patientRequest.phoneNumber
 			}
 			if test.patientRequest.email != "" {
-				query.Set("email", test.patientRequest.email)
+				body["email"] = test.patientRequest.email
 			}
 
-			path := "/patient/search"
-			if encoded := query.Encode(); encoded != "" {
-				path += "?" + encoded
-			}
-
-			req, _ := http.NewRequest(http.MethodGet, path, nil)
+			jsonBody, _ := json.Marshal(body)
+			req, _ := http.NewRequest(http.MethodGet, "/patient/search", bytes.NewReader(jsonBody))
+			req.Header.Set("Content-Type", "application/json")
 			req.Header.Set("Authorization", "Bearer "+makeTestAuthToken("mysecretkey", test.hospitalID))
 			w := httptest.NewRecorder()
 			router.ServeHTTP(w, req)
