@@ -37,15 +37,14 @@ type PatientHospital struct {
 }
 
 type SeachPatientRequest struct {
-	NationalID  *string `json:"national_id"`
-	PassportID  *string `json:"passport_id"`
-	FirstName   *string `json:"first_name"`
-	MiddleName  *string `json:"middle_name"`
-	LastName    *string `json:"last_name"`
-	DateOfBirth *string `json:"date_of_birth"`
-	PhoneNumber *string `json:"phone_number"`
-	Email       *string `json:"email"`
-	HospitalURL string  `json:"hospital_url" binding:"required"`
+	NationalID  *string `json:"national_id" default:""`
+	PassportID  *string `json:"passport_id" default:""`
+	FirstName   *string `json:"first_name" default:""`
+	MiddleName  *string `json:"middle_name" default:""`
+	LastName    *string `json:"last_name" default:""`
+	DateOfBirth *string `json:"date_of_birth" default:""`
+	PhoneNumber *string `json:"phone_number" default:""`
+	Email       *string `json:"email" default:""`
 }
 
 type CreatePatientRequest struct {
