@@ -1,0 +1,35 @@
+# Agnos Hospital Information System (HIS) API
+
+A RESTful API service for managing hospital patients and staff, built with Go, Gin, and PostgreSQL.
+
+## Tech Stack
+
+- **Language**: Go 1.25
+- **Framework**: Gin
+- **Database**: PostgreSQL 16 (via GORM)
+- **Auth**: JWT (golang-jwt/jwt v5)
+- **Migration**: Goose
+- **Container**: Docker / Docker Compose
+
+## Project Structure
+
+```
+.
+├── api/
+│   ├── handler/        # HTTP handlers (staff, patient)
+│   ├── middleware/     # JWT auth middleware
+│   ├── presenter/      # Response models
+│   └── routes/         # Route registration
+├── cmd/
+│   └── main.go         # Entry point
+├── internal/
+│   ├── config/         # Environment config loader
+│   ├── database/       # GORM connection setup
+│   └── repository/     # GORM repository implementations
+├── migrations/         # SQL migration files (Goose)
+├── nginx/              # Nginx reverse proxy config
+└── pkg/
+    ├── hospital/       # Hospital domain (entity, repo, service, usecase)
+    ├── patient/        # Patient domain
+    └── staff/          # Staff domain
+```
