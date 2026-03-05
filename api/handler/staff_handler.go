@@ -94,7 +94,7 @@ func (h *StaffHandler) Login(ginContext *gin.Context) {
 			return
 		}
 
-		ginContext.JSON(http.StatusInternalServerError, gin.H{
+		ginContext.JSON(http.StatusUnauthorized, gin.H{
 			"error": "internal server error",
 		})
 		return
