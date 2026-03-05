@@ -48,6 +48,15 @@ func (h *PatientHandler) SearchPatient(c *gin.Context) {
 	phoneNumber := c.Query("phone_number")
 	email := c.Query("email")
 
+	// get hospital id from context (set by auth middleware)
+	hospitalID, exists := c.Get("hospital_id")
+	if !exists {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "hospital id not found in token",
+		})
+		return
+	}
+
 	patients, err := h.patientUsecase.Search(c.Request.Context(), &entity.SeachPatientRequest{
 		NationalID:  &nationalID,
 		PassportID:  &passportID,
@@ -57,7 +66,7 @@ func (h *PatientHandler) SearchPatient(c *gin.Context) {
 		DateOfBirth: &dateOfBirth,
 		PhoneNumber: &phoneNumber,
 		Email:       &email,
-	}, "hospital-a")
+	}, hospitalID.(string))
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{

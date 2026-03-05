@@ -76,9 +76,9 @@ func (s *StaffService) generateToken(staff *entity.Staff) (string, error) {
 	now := time.Now()
 
 	claims := middleware.Claims{
-		StaffName:   staff.Username,
-		HospitalURL: staff.Hospital.HospitalURL,
-		StaffID:     staff.ID,
+		StaffName:  staff.Username,
+		HospitalID: staff.Hospital.ID,
+		StaffID:    staff.ID,
 		RegisteredClaims: jwt.RegisteredClaims{
 			Subject:   staff.ID,
 			IssuedAt:  jwt.NewNumericDate(now),

@@ -9,9 +9,9 @@ import (
 )
 
 type Claims struct {
-	StaffName   string `json:"staff_name"`
-	HospitalURL string `json:"hospital_url"`
-	StaffID     string `json:"staff_id"`
+	StaffName  string `json:"staff_name"`
+	HospitalID string `json:"hospital_id"`
+	StaffID    string `json:"staff_id"`
 	jwt.RegisteredClaims
 }
 
@@ -45,7 +45,7 @@ func AuthMiddleware(appSecret string) gin.HandlerFunc {
 
 		if claims, ok := token.Claims.(*Claims); ok {
 			c.Set("staff_name", claims.StaffName)
-			c.Set("hospital_url", claims.HospitalURL)
+			c.Set("hospital_id", claims.HospitalID)
 			c.Set("staff_id", claims.StaffID)
 			c.Next()
 			return

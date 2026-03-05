@@ -30,13 +30,12 @@ func (r *PatientGormRepository) SearchByID(ctx context.Context, id string) (*ent
 }
 
 // Search implements [repository.PatientRepository].
-func (r *PatientGormRepository) Search(ctx context.Context, req *entity.SeachPatientRequest, hospitalURL string) ([]*entity.Patient, error) {
+func (r *PatientGormRepository) Search(ctx context.Context, req *entity.SeachPatientRequest, hospitalID string) ([]*entity.Patient, error) {
 	var patients []*entity.Patient
 	query := r.db.WithContext(ctx).
 		Preload("PatientHospitals").
 		Joins("JOIN patient_hospitals ON patient_hospitals.patient_id = patients.id").
-		Joins("JOIN hospitals ON patient_hospitals.hospital_id = hospitals.id").
-		Where("hospitals.hospital_url = ?", hospitalURL)
+		Where("patient_hospitals.hospital_id = ?", hospitalID)
 
 	if req.NationalID != nil && *req.NationalID != "" {
 		query = query.Where("patients.national_id = ?", req.NationalID)
