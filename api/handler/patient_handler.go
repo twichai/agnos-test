@@ -26,7 +26,7 @@ func (h *PatientHandler) GetPatientByID(c *gin.Context) {
 		return
 	}
 
-	patient, err := h.patientUsecase.SearchByID(c.Request.Context(), id, "hospital-a")
+	patient, err := h.patientUsecase.SearchByID(c.Request.Context(), id)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{
 			"error": err.Error(),

@@ -16,14 +16,12 @@ func NewPatientGormRepository(db *gorm.DB) repository.PatientRepository {
 	return &PatientGormRepository{db: db}
 }
 
-func (r *PatientGormRepository) SearchByID(ctx context.Context, id string, hospitalURL string) (*entity.Patient, error) {
+func (r *PatientGormRepository) SearchByID(ctx context.Context, id string) (*entity.Patient, error) {
 	var patient entity.Patient
 	if err := r.db.WithContext(ctx).
 		Preload("PatientHospitals").
 		Where("patients.national_id = ? OR patients.passport_id = ?", id, id).
 		Joins("JOIN patient_hospitals ON patient_hospitals.patient_id = patients.id").
-		Joins("JOIN hospitals ON patient_hospitals.hospital_id = hospitals.id").
-		Where("hospitals.hospital_url = ?", hospitalURL).
 		First(&patient).Error; err != nil {
 		return nil, err
 	}
@@ -40,10 +38,10 @@ func (r *PatientGormRepository) Search(ctx context.Context, req *entity.SeachPat
 		Joins("JOIN hospitals ON patient_hospitals.hospital_id = hospitals.id").
 		Where("hospitals.hospital_url = ?", hospitalURL)
 
-	if *req.NationalID != "" {
+	if req.NationalID != nil && *req.NationalID != "" {
 		query = query.Where("patients.national_id = ?", req.NationalID)
 	}
-	if *req.PassportID != "" {
+	if req.PassportID != nil && *req.PassportID != "" {
 		query = query.Where("patients.passport_id = ?", req.PassportID)
 	}
 	if *req.FirstName != "" {
@@ -58,10 +56,10 @@ func (r *PatientGormRepository) Search(ctx context.Context, req *entity.SeachPat
 	if *req.DateOfBirth != "" {
 		query = query.Where("patients.date_of_birth = ?", req.DateOfBirth)
 	}
-	if *req.PhoneNumber != "" {
+	if req.PhoneNumber != nil && *req.PhoneNumber != "" {
 		query = query.Where("patients.phone_number = ?", req.PhoneNumber)
 	}
-	if *req.Email != "" {
+	if req.Email != nil && *req.Email != "" {
 		query = query.Where("patients.email = ?", req.Email)
 	}
 

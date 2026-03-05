@@ -6,6 +6,6 @@ import (
 )
 
 type PatientRepository interface {
-	SearchByID(ctx context.Context, id string, hospitalURL string) (*entity.Patient, error)
+	SearchByID(ctx context.Context, id string) (*entity.Patient, error)
 	Search(ctx context.Context, req *entity.SeachPatientRequest, hospitalURL string) ([]*entity.Patient, error)
 }

@@ -47,6 +47,14 @@ type SeachPatientRequest struct {
 	HospitalURL string  `json:"hospital_url" binding:"required"`
 }
 
+type CreatePatientRequest struct {
+	NationalID  string `json:"national_id" binding:"required"`
+	PassportID  string `json:"passport_id" binding:"required"`
+	FirstNameTH string `json:"first_name_th" binding:"required"`
+	LastNameTH  string `json:"last_name_th" binding:"required"`
+	DateOfBirth string `json:"date_of_birth" binding:"required"`
+}
+
 func (PatientHospital) TableName() string {
 	return "patient_hospitals"
 }

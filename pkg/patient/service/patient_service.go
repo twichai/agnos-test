@@ -21,12 +21,12 @@ func NewPatientUsecase(repo repository.PatientRepository) usecase.PatientUsecase
 	return &patientUsecase{repo: repo}
 }
 
-func (u *patientUsecase) SearchByID(ctx context.Context, id string, hospitalURL string) (*entity.Patient, error) {
+func (u *patientUsecase) SearchByID(ctx context.Context, id string) (*entity.Patient, error) {
 	if strings.TrimSpace(id) == "" {
 		return nil, errors.New("patient id is required")
 	}
 
-	patient, err := u.repo.SearchByID(ctx, id, hospitalURL)
+	patient, err := u.repo.SearchByID(ctx, id)
 	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return nil, ErrPatientNotFound
