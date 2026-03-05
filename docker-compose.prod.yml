@@ -2,6 +2,8 @@ services:
   db:
     image: postgres:16-alpine
     restart: unless-stopped
+    env_file:
+      - .env
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-postgres}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
@@ -16,13 +18,13 @@ services:
       retries: 10
 
   api:
-    build:
-      context: .
-      target: prod
+    image: ${API_IMAGE:-ghcr.io/your-org/agnos-test:latest}
     restart: unless-stopped
     depends_on:
       db:
         condition: service_healthy
+    env_file:
+      - .env
     environment:
       APP_PORT: ${APP_PORT:-8080}
       APP_SECRET: ${APP_SECRET:?set APP_SECRET}
