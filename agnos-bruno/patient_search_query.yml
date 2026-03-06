@@ -5,29 +5,20 @@ info:
 
 http:
   method: GET
-  url: "{{baseUrl}}/patient/search?national_id&passport_id&first_name&last_name&data_of_birth&phone_number&email"
-  params:
-    - name: national_id
-      value: ""
-      type: query
-    - name: passport_id
-      value: ""
-      type: query
-    - name: first_name
-      value: ""
-      type: query
-    - name: last_name
-      value: ""
-      type: query
-    - name: data_of_birth
-      value: ""
-      type: query
-    - name: phone_number
-      value: ""
-      type: query
-    - name: email
-      value: ""
-      type: query
+  url: "{{baseUrl}}/patient/search"
+  body:
+    type: json
+    data: |-
+      {
+        "national_id": "",
+        "passport_id": "",
+        "first_name": "",
+        "middle_name": "",
+        "last_name": "",
+        "date_of_birth": "",
+        "phone_number": "",
+        "email": ""
+      }
   auth:
     type: bearer
     token: "{{authToken}}"

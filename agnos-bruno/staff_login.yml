@@ -11,7 +11,8 @@ http:
     data: |-
       {
         "username": "staff_a",
-        "password": "1234"
+        "password": "1234",
+        "hospital_id": "df5b6d58-f9ee-4ab2-a23e-557fbac85526"
       }
   auth: inherit
 
@@ -19,9 +20,9 @@ runtime:
   scripts:
     - type: after-response
       code: |-
-        const body = res.getBody();
-        if (body && body.token) {
-          bru.setEnvVar("authToken", body.token);
+        if (res.body.Token)
+        {
+          bru.setEnvVar("authToken", res.body.Token);    
         }
 
 settings:

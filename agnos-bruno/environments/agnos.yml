@@ -1,1 +1,6 @@
 name: agnos
+variables:
+  - name: baseUrl
+    value: http://localhost:8082
+  - name: authToken
+    value: ""
