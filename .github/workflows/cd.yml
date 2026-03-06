@@ -72,6 +72,15 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Copy compose file to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "docker-compose.prod.yml"
+          target: ~/agnos
+
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
         with:
@@ -81,10 +90,8 @@ jobs:
           script: |
             set -e
 
-            cd ${{ secrets.DEPLOY_PATH }}
-
-            # Pull latest code for docker-compose.prod.yml file
-            git pull origin main
+            mkdir -p ~/agnos
+            cd ~/agnos
 
             # Log in to GHCR
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
@@ -94,17 +101,14 @@ jobs:
 
             # Write .env file from secrets
             cat > .env << 'EOF'
-            APP_PORT=8080
+            APP_PORT=${{ secrets.APP_PORT }}
             APP_SECRET=${{ secrets.APP_SECRET }}
-            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            DB_URL=${{ secrets.DB_URL }}
             API_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.image_tag || 'latest' }}
             EOF
 
-            # Restart services (zero-downtime: db is not recreated if healthy)
-            docker compose -f docker-compose.prod.yml pull api
-            docker compose -f docker-compose.prod.yml up -d --no-deps api
+            # Restart api service (entrypoint.sh will run migrations automatically)
+            docker compose -f docker-compose.prod.yml up -d --pull always api
 
             # Clean up old images
             docker image prune -f
