@@ -1,0 +1,9 @@
+server {
+    listen 80;
+    listen [::]:80;
+    server_name hospital-a.api.co.th;
+
+    location / {
+        proxy_pass http://localhost:8082;
+    }
+}
