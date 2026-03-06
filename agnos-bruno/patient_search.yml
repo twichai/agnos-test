@@ -5,7 +5,11 @@ info:
 
 http:
   method: GET
-  url: "{{baseUrl}}/patient/search/0861111111"
+  url: "{{baseUrl}}/patient/search/:id"
+  params:
+    - name: id
+      value: JP765432
+      type: path
   auth:
     type: bearer
     token: "{{authToken}}"

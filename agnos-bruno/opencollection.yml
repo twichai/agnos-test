@@ -18,7 +18,6 @@ request:
   variables:
     - name: baseUrl
       value: http://localhost:8080
-    - name: authToken
-      value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdGFmZl9uYW1lIjoic3RhZmZfYSIsImhvc3BpdGFsX2lkIjoiZGY1YjZkNTgtZjllZS00YWIyLWEyM2UtNTU3ZmJhYzg1NTI2Iiwic3RhZmZfaWQiOiJmNDUwNTJkZi04YTYzLTRlYWYtODUxZC1iZDQ4M2MxNGJjMDEiLCJzdWIiOiJmNDUwNTJkZi04YTYzLTRlYWYtODUxZC1iZDQ4M2MxNGJjMDEiLCJleHAiOjE3NzI2MzU1MzAsIm5iZiI6MTc3MjU0OTEzMCwiaWF0IjoxNzcyNTQ5MTMwfQ.TkAZT_ME7AutqIRXBWUE-RDgzwKAQYStmR_bIRks5YA
+      disabled: true
 bundled: false
 extensions: {}

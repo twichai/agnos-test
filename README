@@ -33,3 +33,5 @@ A RESTful API service for managing hospital patients and staff, built with Go, G
     ├── patient/        # Patient domain
     └── staff/          # Staff domain
 ```
+
+See [nginx/nginx.md](nginx/nginx.md) for Nginx reverse proxy setup and SSL configuration guide.

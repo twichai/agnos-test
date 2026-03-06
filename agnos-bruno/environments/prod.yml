@@ -1,0 +1,8 @@
+name: prod
+variables:
+  - name: baseUrl
+    value: https://hospital-a.apii.online
+  - name: authToken
+    value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdGFmZl9uYW1lIjoic3RhZmZfYSIsImhvc3BpdGFsX2lkIjoiMjRlYTg5NGEtZWVkMy00ZWJiLTllZmUtN2M5ZjdlYWY5MDllIiwic3RhZmZfaWQiOiIxNDcyZDYwYi1jODI5LTQ2NjAtODBkMS0zNTAyNWJkNTUxMjYiLCJzdWIiOiIxNDcyZDYwYi1jODI5LTQ2NjAtODBkMS0zNTAyNWJkNTUxMjYiLCJleHAiOjE3NzI4NTc5MTIsIm5iZiI6MTc3Mjc3MTUxMiwiaWF0IjoxNzcyNzcxNTEyfQ.hRepfRcqW_L5-poLv1PzSE9MYFKtiarpy7-I6F_XwBs
+  - name: hospitalID
+    value: 24ea894a-eed3-4ebb-9efe-7c9f7eaf909e
