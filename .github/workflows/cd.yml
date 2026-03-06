@@ -101,17 +101,14 @@ jobs:
 
             # Write .env file from secrets
             cat > .env << 'EOF'
-            APP_PORT=${{ secrets.APP_PORT }}
+            APP_PORT=8080
             APP_SECRET=${{ secrets.APP_SECRET }}
-            POSTGRES_USER=${{ secrets.POSTGRES_USER }}
-            POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
-            POSTGRES_DB=${{ secrets.POSTGRES_DB }}
+            DB_URL=${{ secrets.DB_URL }}
             API_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.image_tag || 'latest' }}
             EOF
 
-            # Restart services (zero-downtime: db is not recreated if healthy)
-            docker compose -f docker-compose.prod.yml pull api
-            docker compose -f docker-compose.prod.yml up -d --no-deps api
+            # Restart api service
+            docker compose -f docker-compose.prod.yml up -d --pull always api
 
             # Clean up old images
             docker image prune -f
