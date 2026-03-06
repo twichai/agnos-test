@@ -72,13 +72,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Copy files to server
+      - name: Copy compose file to server
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          source: "docker-compose.prod.yml,migrations"
+          source: "docker-compose.prod.yml"
           target: ~/agnos
 
       - name: Deploy via SSH
@@ -107,14 +107,8 @@ jobs:
             API_IMAGE=${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ inputs.image_tag || 'latest' }}
             EOF
 
-            # Restart api service
+            # Restart api service (entrypoint.sh will run migrations automatically)
             docker compose -f docker-compose.prod.yml up -d --pull always api
-
-            # Run database migrations
-            docker run --rm \
-              -v ~/agnos/migrations:/migrations \
-              ghcr.io/kukymbr/goose-docker:latest \
-              postgres "$DB_URL" up
 
             # Clean up old images
             docker image prune -f
