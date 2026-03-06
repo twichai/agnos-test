@@ -4,3 +4,5 @@ variables:
     value: http://localhost:8082
   - name: authToken
     value: ""
+  - name: hospitalID
+    value: df5b6d58-f9ee-4ab2-a23e-557fbac85526

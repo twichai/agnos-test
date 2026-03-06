@@ -10,9 +10,9 @@ http:
     type: json
     data: |-
       {
-        "username": "staf_a",
+        "username": "staff_a",
         "password": "1234",
-        "hospital_id": "df5b6d58-f9ee-4ab2-a23e-557fbac85526"
+        "hospital_id": "{{hospitalID}}"
       }
   auth: inherit
 
